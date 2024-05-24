@@ -1,9 +1,9 @@
 package api
 
-// import (
-// 	"encoding/json"
-// 	"net/http"
-// )
+import (
+	"encoding/json"
+	"net/http"
+)
 
 // Here we define the structs of the responses and parameters
 
@@ -23,3 +23,28 @@ type Error struct {
 
 	Message string
 }
+
+func writeError(w http.ResponseWriter, message string, code int) {
+	resp := Error{
+		Code:    code,
+		Message: message,
+	}
+
+	// Set Headers
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+
+	// Set response
+	json.NewEncoder(w).Encode(resp)
+}
+
+var (
+	// if there is an error with the request
+	RequestErrorHandler = func(w http.ResponseWriter, err error) {
+		writeError(w, err.Error(), http.StatusBadRequest)
+	}
+	// if there is an error with our code, we send this
+	InternalErrorHandler = func(w http.ResponseWriter) {
+		writeError(w, "An Unexpected Error had occured", http.StatusInternalServerError)
+	}
+)
