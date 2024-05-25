@@ -37,6 +37,7 @@ func Authorization(next http.Handler) http.Handler {
 		if loginDetails == nil || (token != (*loginDetails).AuthToken) {
 			log.Error(UnAuthorizedError)
 			api.RequestErrorHandler(w, UnAuthorizedError)
+			return
 		}
 
 		// Go next middleware
