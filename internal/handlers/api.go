@@ -13,6 +13,7 @@ func Handler(r chi.Router) {
 	r.Route("/account", func(r chi.Router) {
 
 		r.Use(middleware.Authorization)
-		r.Get("/coins", GetCoinBalance) // GET user account balance
+		r.Get("/coins", GetCoinBalance)       // GET user account balance
+		r.Put("/coins/edit", EditCoinBalance) // PUT
 	})
 }

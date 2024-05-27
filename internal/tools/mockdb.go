@@ -1,5 +1,9 @@
 package tools
 
+import (
+	"fmt"
+)
+
 type mockdb struct{}
 
 var mockLoginDetails = map[string]LoginDetails{
@@ -47,6 +51,33 @@ func (d *mockdb) GetCoinBalanceDetails(username string) *CoinBalanceDetails {
 	if !ok {
 		return nil
 	}
+	return &coinBalanceDetails
+}
+
+func (d *mockdb) EditCoinBalanceDetails(username string, operation string, amount int64) *CoinBalanceDetails {
+	var coinBalanceDetails = CoinBalanceDetails{}
+	coinBalanceDetails, ok := mockCoinBalanceDetails[username]
+	if !ok {
+		return nil
+	}
+	fmt.Printf("Received Params and have coinBalance %v, %v, %v, %v \n", username, operation, amount, coinBalanceDetails)
+
+	var newBalance = coinBalanceDetails.CoinBalance
+	fmt.Printf("Got newBalance %v \n", newBalance)
+	if operation == "+" {
+		fmt.Printf("adding \n")
+		newBalance += amount
+	} else if operation == "-" {
+		fmt.Printf("subtracting \n")
+		newBalance -= amount
+	} else {
+		fmt.Printf("error \n")
+		return nil
+	}
+	fmt.Printf("Balance adjusted %v at %v \n", newBalance, &coinBalanceDetails)
+	coinBalanceDetails.CoinBalance = newBalance
+	mockCoinBalanceDetails[username] = coinBalanceDetails
+	fmt.Printf("Mock balance is %v \n", mockCoinBalanceDetails[username])
 	return &coinBalanceDetails
 }
 

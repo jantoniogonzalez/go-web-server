@@ -12,6 +12,7 @@ type CoinBalanceParams struct {
 	Username string
 }
 
+// Reponse
 type SuccessfulResponse struct {
 	Code int
 
@@ -22,6 +23,15 @@ type Error struct {
 	Code int
 
 	Message string
+}
+
+// Body
+type EditCoinBalanceBody struct {
+	Username string
+
+	Operation string
+
+	Amount int64
 }
 
 func writeError(w http.ResponseWriter, message string, code int) {
